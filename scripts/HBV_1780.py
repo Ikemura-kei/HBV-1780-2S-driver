@@ -1,12 +1,24 @@
+'''
+The driver functions to read images from the camera.
+'''
+
 import cv2
 from HBV_1780_constants import *
 
 def hbv_1780_start(device_index = 2):
+    """Initialize the camera.
+
+    Args:
+        device_index (int, optional): the camera device index in the operating system. Defaults to 2.
+
+    Returns:
+        cv2.VideoCapture: the video capture object to the camera, you can use the standard OpenCV API to read the frames.
+    """
     cap = cv2.VideoCapture(device_index)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, HBV_1780_SET_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HBV_1780_SET_HEIGHT)
-    # cap.set(cv2.CAP_PROP_FPS, 2)
 
+    # -- read a frame for testing --
     ret, test_frame = cap.read()
     
     if not ret:
@@ -16,10 +28,19 @@ def hbv_1780_start(device_index = 2):
     return cap
 
 def hbv_1780_get_left_and_right(image):
-    left = image[:, 0:HBV_1780_SET_WIDTH_HALF-1, :]
-    right = image[:, HBV_1780_SET_WIDTH_HALF:-1, :]
+    """Get the left and right images from the raw image returned from the camera.
+
+    Args:
+        image (numpy.ndarray): the raw image read from the camera.
+
+    Returns:
+        numpy.ndarray, numpy.ndarray: the left and right images, respectively.
+    """
+    left = image[:, 0:HBV_1780_SET_WIDTH_HALF, :]
+    right = image[:, HBV_1780_SET_WIDTH_HALF:, :]
     return left, right
 
+# -- for debug, you can run this script on its own to check if everything is fine --
 if __name__ == "__main__":
     camera = hbv_1780_start()
 
@@ -39,8 +60,8 @@ if __name__ == "__main__":
             cv2.imshow("right", frame_r)
 
             k = cv2.waitKey(1)
+            # -- finish if the 'q' key is pressed --
             if k == ord('q'):
-                print("Escape hit, closing...")
                 break
 
         camera.release()
