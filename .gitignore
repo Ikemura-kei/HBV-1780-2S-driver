@@ -1,2 +1,3 @@
 *.zip
 calibration_images/*/
+__pycache__/
