@@ -165,7 +165,7 @@ def single_camera_calibration(row, col, img_folder, tile_size, verbose):
 
     Returns:
         cmtx (numpy.ndarray): the 3x3 intrinsic matrix
-        dist (numpy.ndarray): the 5-element distortion coefficient
+        dist (numpy.ndarray): the 5-element distortion coefficient (k1, k2, p1, p2, k3)
         img_p (numpy.ndarray): the detected chessboard corners
         obj_p (numpy.ndarray): the object points (in the world coordinates) of the chessboard corners
     """

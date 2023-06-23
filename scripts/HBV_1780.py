@@ -4,6 +4,7 @@ The driver functions to read images from the camera.
 
 import cv2
 from HBV_1780_constants import *
+import time
 
 def hbv_1780_start(device_index = 2):
     """Initialize the camera.
@@ -17,6 +18,7 @@ def hbv_1780_start(device_index = 2):
     cap = cv2.VideoCapture(device_index)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, HBV_1780_SET_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HBV_1780_SET_HEIGHT)
+    cap.set(cv2.CAP_PROP_FPS, 25)
 
     # -- read a frame for testing --
     ret, test_frame = cap.read()
@@ -44,6 +46,7 @@ def hbv_1780_get_left_and_right(image):
 if __name__ == "__main__":
     camera = hbv_1780_start()
 
+    last_time = time.time()
     if camera != None:
         cv2.namedWindow("left")
         cv2.namedWindow("right")
@@ -63,7 +66,11 @@ if __name__ == "__main__":
             # -- finish if the 'q' key is pressed --
             if k == ord('q'):
                 break
-
+            
+            dt = time.time() - last_time
+            print("fps:", 1/dt)
+            last_time = time.time()
+            
         camera.release()
 
         cv2.destroyAllWindows()
